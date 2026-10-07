@@ -134,8 +134,8 @@ jobs:
       ARTIFACT_BUCKET: ${{ secrets.ARTIFACT_BUCKET }}
       SERVER_HOST: ${{ secrets.SERVER_HOST }}
       SERVER_USER: ${{ secrets.SERVER_USER }}
-      SECURITY_GROUP_ID: ${{ vars.SECURITY_GROUP_ID }}
-      SERVER_SSH_FINGERPRINT: ${{ vars.SERVER_SSH_FINGERPRINT }}
+      SECURITY_GROUP_ID: ${{ vars.SECURITY_GROUP_ID || secrets.SECURITY_GROUP_ID }}
+      SERVER_SSH_FINGERPRINT: ${{ vars.SERVER_SSH_FINGERPRINT || secrets.SERVER_SSH_FINGERPRINT }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -144,11 +144,14 @@ jobs:
           path: models
       - name: Check deployment configuration
         run: |
-          test -n "$SECURITY_GROUP_ID"
-          test -n "$SERVER_SSH_FINGERPRINT"
-          test -n "$SERVER_HOST"
-          test -n "$SERVER_USER"
-          test -n "$ARTIFACT_BUCKET"
+          missing=0
+          for name in SECURITY_GROUP_ID SERVER_SSH_FINGERPRINT SERVER_HOST SERVER_USER ARTIFACT_BUCKET; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing $name. Configure it in repository Settings > Secrets and variables > Actions."
+              missing=1
+            fi
+          done
+          exit "$missing"
       - name: Authenticate to AWS
         uses: aws-actions/configure-aws-credentials@v5
         with:
