@@ -34,3 +34,9 @@ variable "github_oidc_provider_arn" {
   type        = string
   default     = ""
 }
+
+variable "github_oidc_subject" {
+  description = "Exact sub claim from the GitHub OIDC token; supports immutable repository IDs"
+  type        = string
+  default     = ""
+}
