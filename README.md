@@ -1,5 +1,7 @@
 # Lab MLOps Thực Hành: Từ Thực Nghiệm Cục Bộ Đến Triển Khai Liên Tục
 
+Hướng dẫn vận hành AWS: [Runbook Terraform, S3, EC2 và GitHub Actions](tasks/runbook-aws.md).
+
 Course: AIInAction - VinUni
 Buổi: Day 21 - CI/CD cho AI Systems
 Khoá: K4
